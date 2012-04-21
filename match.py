@@ -6,7 +6,8 @@ def compute_pi(pattern):
     """compute_pi(pattern) -> list of integers
 
     Return the prefix function pi[q] as an array of length len(pattern) + 1.
-    pi[q] = max { k: k < q and pattern[:k] is a suffix of pattern[:q] }"""
+    pi[q] = max{ k: k < q and pattern[:k] is a suffix of pattern[:q] }
+    Runs in O(len(pattern)) time."""
 
     m = len(pattern)
     pi = [-1] * (m + 1)
@@ -25,7 +26,7 @@ def kmp_match(pattern, text):
     """kmp_match(pattern, text) -> generator
 
     Yields all valid shifts in text using the Knuth-Morris-Pratt
-    algorithm."""
+    algorithm. Runs in O(len(pattern) + len(text)) time."""
 
     m = len(pattern)
     n = len(text)
@@ -45,7 +46,7 @@ def compute_z(S):
     """compute_z(S) -> list of integers
 
     Return the Z function Z_i as a list. Z_i is the longest common prefix of
-    S and S[i:]"""
+    S and S[i:]. Runs in O(len(S)) time."""
 
     m = len(S)
     Z = [0] * m
@@ -76,3 +77,20 @@ def compute_z(S):
         i += 1
 
     return Z
+
+
+def z_match(pattern, text):
+    """z_match(pattern, text) -> generator
+
+    Yield all valid shifts using the Z algorithm. Runs in O(len(pattern) +
+    len(text)) time."""
+
+    S = pattern + '$' + text
+    Z = compute_z(S)
+
+    m = len(pattern)
+    n = len(text)
+
+    for i in range(m + 1, m + 1 + n):
+        if Z[i] >= m:
+            yield i - m - 1
